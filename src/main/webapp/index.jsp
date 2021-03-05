@@ -9,6 +9,7 @@
     </head>
     <body>
         <h1>Hello World!</h1>
-        <a href="ServletProductos" >Arrancamos</a>
+        <a href="ServletProductos?op=listar" >Arrancamos</a>
+        <a href="ServletProductos?op=insert1" >Insert 1</a>
     </body>
 </html>

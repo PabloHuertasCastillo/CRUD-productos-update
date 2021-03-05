@@ -34,30 +34,56 @@ public class ServletProductos extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ServletProductos</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ServletProductos at " + request.getContextPath() + "</h1>");
+        String op = request.getParameter("op");
+        /* TODO output your page here. You may use following sample code. */
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>Servlet ServletProductos</title>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<h1>Servlet ServletProductos at " + request.getContextPath() + "</h1>");
+
+        if (op.endsWith("listar")) {
             List<Productos> misProductos = CRUD.getProductos();
-            for (Productos p: misProductos){
-                out.println(p.getNombre());
-            }
+            request.setAttribute("misproductos", misProductos);
+            request.getRequestDispatcher("listar.jsp").forward(request, response);
+//            for (Productos p : misProductos) {
+//                out.println(p.getNombre());
+//            }
+
+        }
+
+        if (op.equals("insert1")) { //cuando le indicamos que vaya a insertar
+            request.getRequestDispatcher("insert.jsp").forward(request, response);
+
+        }
+
+        if (op.equals("insert2")) { //cuando recibe los datos de la inserción
             Productos miProducto = new Productos();
-            miProducto.setId(11);
-            miProducto.setNombre("Tarta de limon");
-            miProducto.setImagen("tarta.jpg");
-            miProducto.setCategoria("Tartas");
-            miProducto.setPrecio(12);
-            CRUD.actualizaProducto(miProducto);
+            miProducto.setNombre(request.getParameter("nombre"));
+            miProducto.setImagen(request.getParameter("imagen"));
+            miProducto.setCategoria(request.getParameter("categoria"));
+            String precio = request.getParameter("precio");
+            miProducto.setPrecio(Float.parseFloat(precio));
             CRUD.insertaProducto(miProducto);
-            out.println("</body>");
-            out.println("</html>");
+            out.println("<h1> " + "<a href='index.jsp' >Mandar a index</a>" + "</h1>");
+        }
         
+        if (op.equals("borrar")) { 
+            int id = Integer.parseInt(request.getParameter("id"));
+            
+            if ( CRUD.destroyProducto(id)>0 ) {
+                out.println("<h1> registro borrado " + "<a href='index.jsp' >Volver</a>" + "</h1>");
+            }
+            
+            request.getRequestDispatcher("insert.jsp").forward(request, response);
+
+        }
+
+        out.println("</body>");
+        out.println("</html>");
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

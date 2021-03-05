@@ -37,7 +37,7 @@ public class CRUD {
     }
     
     public static int actualizaProducto(Productos miProducto) {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("com.mycompany_MantenimientoProductos2_war_1PU");
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("com.mycompany_ProductosCRUDupdate_war_1.0-SNAPSHOTPU");
         EntityManager manager = factory.createEntityManager();
         String sql = "UPDATE Productos p SET p.nombre = :nombre, p.imagen = :imagen, p.categoria = :categoria, p.precio = :precio WHERE p.id = :id";
         Query q = manager.createQuery(sql,Productos.class);
@@ -54,12 +54,24 @@ public class CRUD {
     }
     
     public static void insertaProducto(Productos producto) {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("com.mycompany_MantenimientoProductos2_war_1PU");
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("com.mycompany_ProductosCRUDupdate_war_1.0-SNAPSHOTPU");
         EntityManager manager = factory.createEntityManager();
          manager.getTransaction().begin();
         manager.merge(producto);
         manager.getTransaction().commit();
-        }
+    }
+    
+    public static int destroyProducto(int id) {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("com.mycompany_ProductosCRUDupdate_war_1.0-SNAPSHOTPU");
+        EntityManager manager = factory.createEntityManager();
+        String sql = "DELETE from Productos p WHERE p.id = " + id;
+        Query q = manager.createQuery(sql);
+        manager.getTransaction().begin();
+        int filasAfectadas = q.executeUpdate(); //para las consultas de modif. datos se usa el método executeUpdate
+        manager.getTransaction().commit();
+        return filasAfectadas;  
+    }
+
 
 
 

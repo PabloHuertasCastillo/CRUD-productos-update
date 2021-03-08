@@ -20,6 +20,8 @@ import java.util.List;
  * @author Pablo
  */
 public class ServletProductos extends HttpServlet {
+    
+    private int id;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,9 +46,9 @@ public class ServletProductos extends HttpServlet {
         out.println("<body>");
         out.println("<h1>Servlet ServletProductos at " + request.getContextPath() + "</h1>");
 
-        if (op.endsWith("listar")) {
-            List<Productos> misProductos = CRUD.getProductos();
-            request.setAttribute("misproductos", misProductos);
+        if (op.equals("listar")) {
+            List <Productos> misProductos = CRUD.getProductos();
+            request.setAttribute("misProductos", misProductos);
             request.getRequestDispatcher("listar.jsp").forward(request, response);
 //            for (Productos p : misProductos) {
 //                out.println(p.getNombre());
@@ -73,11 +75,32 @@ public class ServletProductos extends HttpServlet {
         if (op.equals("borrar")) { 
             int id = Integer.parseInt(request.getParameter("id"));
             
-            if ( CRUD.destroyProducto(id)>0 ) {
+            if ( CRUD.destroyProducto(id)> 0 ) {
                 out.println("<h1> registro borrado " + "<a href='index.jsp' >Volver</a>" + "</h1>");
             }
             
-            request.getRequestDispatcher("insert.jsp").forward(request, response);
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+
+        }
+        
+        if (op.equals("update1")) { 
+            id = Integer.parseInt(request.getParameter("id"));
+            Productos miProducto = CRUD.getProducto(id);
+            request.setAttribute("miProducto", miProducto);
+            request.getRequestDispatcher("update.jsp").forward(request, response);
+
+        }
+        
+        if (op.equals("update2")) {
+            String nombre = request.getParameter("nombre");
+            String imagen = request.getParameter("imagen");
+            String categoria = request.getParameter("categoria");
+            float precio = Float.parseFloat(request.getParameter("precio"));
+            Productos miProducto = new Productos(id, nombre, imagen ,categoria, precio);
+            int filas = CRUD.actualizaProducto(miProducto);
+            request.setAttribute("miProducto", miProducto);
+            request.setAttribute("mensaje", "Producto actualizado");
+            request.getRequestDispatcher("update.jsp").forward(request, response);
 
         }
 
